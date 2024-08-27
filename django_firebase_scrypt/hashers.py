@@ -4,9 +4,9 @@ from collections import OrderedDict
 
 from django.conf import settings
 from django.contrib.auth.hashers import BasePasswordHasher, mask_hash
-from django.utils.translation import ugettext_noop as _
+from django.utils.translation import gettext_noop as _
 
-import pyscryptfirebase
+import importlib
 
 
 class FirebaseScryptPasswordHasher(BasePasswordHasher):
@@ -19,7 +19,7 @@ class FirebaseScryptPasswordHasher(BasePasswordHasher):
 
     def verify(self, password, encoded):
         algorithm, salt, hsh = encoded.split("$")
-        hashp = pyscryptfirebase.encrypt(
+        hashp = importlib.encrypt(
             self.signer_key,
             base64.b64decode(salt),
             self.salt_sep,
@@ -31,7 +31,7 @@ class FirebaseScryptPasswordHasher(BasePasswordHasher):
 
     def encode(self, password, salt):
         hsh = base64.b64encode(
-            pyscryptfirebase.encrypt(
+            importlib.encrypt(
                 self.signer_key,
                 base64.b64decode(salt),
                 self.salt_sep,
