@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import BasePasswordHasher, mask_hash
 from django.utils.translation import gettext_noop as _
 
-import importlib
+import pyscryptfirebase
 
 
 class FirebaseScryptPasswordHasher(BasePasswordHasher):
@@ -19,7 +19,7 @@ class FirebaseScryptPasswordHasher(BasePasswordHasher):
 
     def verify(self, password, encoded):
         algorithm, salt, hsh = encoded.split("$")
-        hashp = importlib.encrypt(
+        hashp = pyscryptfirebase.encrypt(
             self.signer_key,
             base64.b64decode(salt),
             self.salt_sep,
@@ -31,7 +31,7 @@ class FirebaseScryptPasswordHasher(BasePasswordHasher):
 
     def encode(self, password, salt):
         hsh = base64.b64encode(
-            importlib.encrypt(
+            pyscryptfirebase.encrypt(
                 self.signer_key,
                 base64.b64decode(salt),
                 self.salt_sep,
